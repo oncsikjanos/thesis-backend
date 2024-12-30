@@ -14,12 +14,12 @@ function isValidEmail(email) {
  * @returns {Object} - { isValid: boolean, message: string }
  */
 function isValidDateOfBirth(dateOfBirth) {
-    // Check if the date string matches YYYY-MM-DD format
-    const dateRegex = /^\d{4}.\d{2}.\d{2}$/;
+    // Check if the date string matches YYYY.MM.DD. format
+    const dateRegex = /^\d{4}.\d{2}.\d{2}.$/;
     if (!dateRegex.test(dateOfBirth)) {
         return { 
             isValid: false, 
-            message: "Date must be in YYYY.MM.DD format" 
+            message: "Date must be in YYYY.MM.DD. format" 
         };
     }
 
@@ -92,7 +92,10 @@ function checkPasswordCriteria(password, confirmPassword) {
     };
    }
 
-   if(password !== confirmPassword){
+   if(!(password === confirmPassword)){
+    console.log("password: " + password)
+    console.log("passwordConfrim: " + confirmPassword)
+    
     return { 
         isValid: false, 
         message: "Passwords do not match" 

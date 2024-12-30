@@ -9,31 +9,32 @@ const Database = require('./db/conn.js');
 const Firebase = require('./db/firebase.js');
 const { validateCookieJWT } = require('./validation/cookieJWTValidator.js');
 
-var indexRouter = require('./routes/index.js');
-var usersRouter = require('./routes/users.js');
-var addUserRouter = require('./routes/addUser.js');
-var getUserRouter = require('./routes/getUser.js');
-var loginRouter = require('./routes/login.js');
-var registerRouter = require('./routes/register.js');
+var addUserRouter = require('./routes/user/addUser.js');
+var getUserRouter = require('./routes/user/getUser.js');
+var loginRouter = require('./routes/auth/login.js');
+var registerRouter = require('./routes/auth/register.js');
+var logoutRouter = require('./routes/auth/logout.js');
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true            
+}));;
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/addUser', addUserRouter);
 app.use('/getUser', validateCookieJWT, getUserRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
+app.use('/logout', logoutRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

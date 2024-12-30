@@ -3,10 +3,11 @@ var router = express.Router();
 var dotenv = require('dotenv').config();
 var jwt = require('jsonwebtoken');
 
-const Database = require('../db/conn.js');
+const Database = require('../../db/conn.js');
 const { getAuth, signInWithEmailAndPassword } = require('firebase/auth');
+const { ErrorMessages } = require('../../public/stylesheets/messages/error-messages.js');
 
-/* Get specific user from DB */
+/* Login user*/
 router.post('', async (req, res) =>{
     const {email, password} = req.body;
     const auth = getAuth();
@@ -27,14 +28,21 @@ router.post('', async (req, res) =>{
         } else {
             const token = jwt.sign(result, process.env.SECRET_KEY, {expiresIn: '1h'});
             res.status(200)
-            .cookie('authToken', token, {httpOnly: true, secure: true, maxAge: 86400})
+            .cookie('authToken', token, 
+                {httpOnly: true,
+                secure: true,
+                sameSite: 'lax',
+                maxAge: 24*60*60*1000})
             .send({succes: true,
                 message: "Succesfully logged in!",
                 user: result
             });
         }
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            "code": error.code,
+            "message": ErrorMessages.AUTH.FIREBASE[error.code]
+        });
     }
 })
 

@@ -8,8 +8,9 @@ exports.validateCookieJWT = (req, res, next) => {
         req.user = verify;
         next();
     }catch(err){
-        res.clearCookie('authToken');
-        return res.status(401)
+        return res
+        .clearCookie('authToken')
+        .status(401)
         .send({
             auth: false,
             error: "Unauthorized" });

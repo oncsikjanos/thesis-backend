@@ -2,15 +2,16 @@ var express = require('express');
 var router = express.Router();
 var dotenv = require('dotenv').config();
 var jwt = require('jsonwebtoken');
-const {isValidEmail, isValidDateOfBirth, isValidName, checkPasswordCriteria}= require('../validation/validator.js');
+const {isValidEmail, isValidDateOfBirth, isValidName, checkPasswordCriteria}= require('../../validation/validator.js');
 
-const Database = require('../db/conn.js');
+const Database = require('../../db/conn.js');
 const { getAuth, createUserWithEmailAndPassword } = require('firebase/auth');
+const { ErrorMessages } = require('../../public/stylesheets/messages/error-messages.js');
 
 /* Register a new user */
 router.post('', async (req, res) => {
     const auth = getAuth();
-    const {email, password, confirmPassword} = req.body;
+    const {email, password, passwordConfirm} = req.body;
 
     try {
         if (!Database.db) {
@@ -36,8 +37,8 @@ router.post('', async (req, res) => {
             return res.status(400).send({ error: isValidDateOfBirth(user.dateOfBirth).message });
         }
 
-        if (!checkPasswordCriteria(password, confirmPassword).isValid) {
-            return res.status(400).send({ error: checkPasswordCriteria(password, confirmPassword).message });
+        if (!checkPasswordCriteria(password,passwordConfirm).isValid) {
+            return res.status(400).send({ error: checkPasswordCriteria(password, passwordConfirm).message });
         }
 
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -48,13 +49,20 @@ router.post('', async (req, res) => {
         const token = jwt.sign(result, process.env.SECRET_KEY, {expiresIn: '1h'});
 
         res.status(201)
-        .cookie('authToken', token, {httpOnly: true, secure: true, maxAge: 86400})
+        .cookie('authToken', token, 
+            {httpOnly: true,
+            secure: true,
+            sameSite: 'lax',
+            maxAge: 24*60*60*1000})
         .send({success: true,
             message: "User registered successfully",
             user: result});
 
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            "code": error.code,
+            "message": ErrorMessages.AUTH.FIREBASE[error.code]
+        });
     }
 })
 
