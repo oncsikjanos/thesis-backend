@@ -6,10 +6,15 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var loadEnvironment = require('./loadEnvironment.js')
 const Database = require('./db/conn.js');
+const Firebase = require('./db/firebase.js');
+const { validateCookieJWT } = require('./validation/cookieJWTValidator.js');
 
 var indexRouter = require('./routes/index.js');
 var usersRouter = require('./routes/users.js');
 var addUserRouter = require('./routes/addUser.js');
+var getUserRouter = require('./routes/getUser.js');
+var loginRouter = require('./routes/login.js');
+var registerRouter = require('./routes/register.js');
 var app = express();
 
 // view engine setup
@@ -26,6 +31,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/addUser', addUserRouter);
+app.use('/getUser', validateCookieJWT, getUserRouter);
+app.use('/login', loginRouter);
+app.use('/register', registerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,5 +52,6 @@ app.use(function(err, req, res, next) {
 });
 
 Database.init();
+Firebase.init();
 
 module.exports = app;
