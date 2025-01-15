@@ -8,12 +8,15 @@ var loadEnvironment = require('./loadEnvironment.js')
 const Database = require('./db/conn.js');
 const Firebase = require('./db/firebase.js');
 const { validateCookieJWT } = require('./validation/cookieJWTValidator.js');
+const { validateAdmin } = require('./validation/adminJWTValidator.js');
 
 var addUserRouter = require('./routes/user/addUser.js');
 var getUserRouter = require('./routes/user/getUser.js');
 var loginRouter = require('./routes/auth/login.js');
 var registerRouter = require('./routes/auth/register.js');
 var logoutRouter = require('./routes/auth/logout.js');
+var addTestRouter = require('./routes/test/addTest.js')
+var updateUserRouter = require('./routes/user/updateUser.js')
 var app = express();
 
 // view engine setup
@@ -30,11 +33,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/addUser', addUserRouter);
 app.use('/getUser', validateCookieJWT, getUserRouter);
+app.use('/updateUser', validateCookieJWT, updateUserRouter)
+
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
-app.use('/logout', logoutRouter)
+
+app.use('/addTest', validateAdmin, addTestRouter);
+app.use('/logout', logoutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

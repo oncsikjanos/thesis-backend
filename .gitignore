@@ -43,3 +43,6 @@ Thumbs.db
 
 #Env file
 .env
+
+#Public
+/images
