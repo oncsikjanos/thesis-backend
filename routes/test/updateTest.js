@@ -6,7 +6,7 @@ const fs = require('fs');
 const { ObjectId } =  require('mongodb');
 const Database = require('../../db/conn.js');
 
-/* Get a test */
+/* Update test */
 router.post('', async (req, res) => {
     try {
         if (!Database.db) {
@@ -21,30 +21,41 @@ router.post('', async (req, res) => {
             })
         }
 
-        const query = {
+        if(!req.body.testData){
+            return res.status(400).send({
+                error:'Didnt got any test data'
+            })
+        }
+
+        const filter = {
             _id:  new ObjectId(req.body.testId),
             teacher: req.user.email
         }
 
-        foundTest = await Database.db.collection(process.env.TEST_COLLECTION).findOne(query);
+        console.log(filter);
 
-        if(!foundTest){
+        console.log(req.body.testData)
+
+        const updateTestQuery = {
+            $set: req.body.testData
+        }
+
+        let updateTestResult = await Database.db.collection(process.env.TEST_COLLECTION).updateOne(filter, updateTestQuery);
+
+        if(!updateTestResult){
             return res.status(400).send({
                 error:'Wrong testId'
             })
         }
 
         return res.status(200).send({
-            test: foundTest
+            test: updateTestResult
         })
 
     } catch (error) {
       console.log(error);
-      if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
       res.status(400).send({
-          message: 'Question update went wrong!'
+          message: 'Test update went wrong!'
       });
     }
 })

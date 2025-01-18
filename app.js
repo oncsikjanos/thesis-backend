@@ -17,6 +17,16 @@ var registerRouter = require('./routes/auth/register.js');
 var logoutRouter = require('./routes/auth/logout.js');
 var addTestRouter = require('./routes/test/addTest.js')
 var updateUserRouter = require('./routes/user/updateUser.js')
+var createInitialTest = require('./routes/test/createInitialTest.js');
+var addQuestion = require('./routes/question/addQuestion.js')
+var getQuestion = require('./routes/question/getQuestion.js')
+var updateQuestion = require('./routes/question/updateQuestion.js')
+var deleteQuestion = require('./routes/question/deleteQuestion.js')
+var addQuestionPicture = require('./routes/question/addQuestionPicture.js')
+var deleteQuestionPicture = require('./routes/question/deleteQuestionPicture.js')
+var getTestsInProgress = require('./routes/test/getTestsInProgress.js')
+var getTest = require('./routes/test/getTest.js')
+var updateTest = require('./routes/test/updateTest.js');
 var app = express();
 
 // view engine setup
@@ -39,10 +49,21 @@ app.use('/addUser', addUserRouter);
 app.use('/getUser', validateCookieJWT, getUserRouter);
 app.use('/updateUser', validateCookieJWT, updateUserRouter)
 
+app.use('/addQuestion', validateAdmin, addQuestion);
+app.use('/getQuestion', validateAdmin, getQuestion);
+app.use('/updateQuestion', validateAdmin, updateQuestion);
+app.use('/deleteQuestion', validateAdmin, deleteQuestion);
+app.use('/addQuestionPicture', validateAdmin, addQuestionPicture);
+app.use('/deleteQuestionPicture', validateAdmin, deleteQuestionPicture);
+
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 
 app.use('/addTest', validateAdmin, addTestRouter);
+app.use('/createInitialTest', createInitialTest);
+app.use('/getTestsInProgress',  validateAdmin ,getTestsInProgress);
+app.use('/getTest', validateAdmin, getTest)
+app.use('/updateTest', validateAdmin, updateTest)
 app.use('/logout', logoutRouter);
 
 // catch 404 and forward to error handler
