@@ -22,7 +22,9 @@ router.post('', async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             dateOfBirth: req.body.dateOfBirth,
-            role: "Student"
+            role: "Student",
+            pfp: 'http://localhost:5050/images/pfp/1736890748850-260695854.jpg',
+            description: ''
         }
 
         if (!isValidName(user.name)) {

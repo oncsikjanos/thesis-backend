@@ -12,7 +12,7 @@ router.get('', async (req, res) => {
             return res.status(503).send({ error: 'Database not initialized yet' });
         }
 
-        if(!req.body.email){
+        if(!req.user.email){
             res.status(400).send({
                 error: 'Didnt got any user email'
             });
@@ -26,10 +26,11 @@ router.get('', async (req, res) => {
             startableTill: new Date(),
             duration: 0,
             poinDeduction: 0,
+            limit: 20,
             videocall : false,
             questions: [],
             students: [],
-            teacher: req.body.email
+            teacher: req.user.email
         }
 
         let collection = await Database.db.collection(process.env.TEST_COLLECTION);
