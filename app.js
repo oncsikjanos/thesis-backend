@@ -29,6 +29,14 @@ var getAppliableTest = require('./routes/test/getAppliableTest.js');
 var deleteTest = require('./routes/test/deleteTest.js');
 var applyToTest = require('./routes/test/applyToTest.js');
 var cancelTestApplication = require('./routes/test/cancelTestApplication.js');
+var getSubjects = require('./routes/test/getSubjects.js');
+var finalizeTest = require('./routes/test/finalizeTest.js');
+var getMyExams = require('./routes/test/getMyExams.js');
+var canTakeTest = require('./routes/test/canTakeTest.js');
+var getTeacherExams = require('./routes/test/getTeacherExams.js');
+var startTest = require('./routes/test/startTest.js');
+var finishTest = require('./routes/test/finishTest.js');
+var attendVideoChat = require('./routes/test/attendVideoChat.js');
 
 /* Question related routes */
 var addQuestion = require('./routes/question/addQuestion.js')
@@ -37,6 +45,9 @@ var updateQuestion = require('./routes/question/updateQuestion.js')
 var deleteQuestion = require('./routes/question/deleteQuestion.js')
 var addQuestionPicture = require('./routes/question/addQuestionPicture.js')
 var deleteQuestionPicture = require('./routes/question/deleteQuestionPicture.js')
+var getExamQuestions = require('./routes/question/getExamQuestions.js')
+var saveAnswer = require('./routes/question/saveAnswer.js')
+var loadAnswer = require('./routes/question/loadAnswer.js')
 
 
 var app = express();
@@ -68,6 +79,9 @@ app.use('/updateQuestion', validateAdmin, updateQuestion);
 app.use('/deleteQuestion', validateAdmin, deleteQuestion);
 app.use('/addQuestionPicture', validateAdmin, addQuestionPicture);
 app.use('/deleteQuestionPicture', validateAdmin, deleteQuestionPicture);
+app.use('/getExamQuestions', validateCookieJWT, getExamQuestions);
+app.use('/saveAnswer', validateCookieJWT, saveAnswer);
+app.use('/loadAnswer', validateCookieJWT, loadAnswer);
 
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
@@ -78,10 +92,18 @@ app.use('/createInitialTest', validateAdmin, createInitialTest); /* add validati
 app.use('/getTestsInProgress',  validateAdmin ,getTestsInProgress);
 app.use('/getTest', validateAdmin, getTest)
 app.use('/updateTest', validateAdmin, updateTest)
-app.use('/getAppliableTest', getAppliableTest) /* add validation */
+app.use('/getAppliableTest', validateCookieJWT, getAppliableTest) /* add validation */
 app.use('/deleteTest', validateAdmin, deleteTest)
 app.use('/applyToTest', validateCookieJWT, applyToTest)
 app.use('/cancelTestApplication', validateCookieJWT, cancelTestApplication)
+app.use('/getSubjects',validateCookieJWT, getSubjects)
+app.use('/finalizeTest',validateAdmin, finalizeTest)
+app.use('/getmyExams', validateCookieJWT, getMyExams)
+app.use('/getTeacherExams', validateAdmin, getTeacherExams)
+app.use('/canTakeTest', validateCookieJWT, canTakeTest)
+app.use('/startTest', validateCookieJWT, startTest)
+app.use('/finishTest', validateCookieJWT, finishTest)
+app.use('/attendVideoChat', validateCookieJWT, attendVideoChat)
 
 
 // catch 404 and forward to error handler

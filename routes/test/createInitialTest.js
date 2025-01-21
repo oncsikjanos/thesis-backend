@@ -25,7 +25,7 @@ router.get('', async (req, res) => {
             startableFrom: new Date(),
             startableTill: new Date(),
             duration: 0,
-            poinDeduction: 0,
+            pointDeduction: 0,
             limit: 20,
             videocall : false,
             questions: [],

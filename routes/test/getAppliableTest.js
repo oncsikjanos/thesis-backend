@@ -28,7 +28,13 @@ router.post('', async (req, res) => {
         }
 
         if(req.body.date){
-            testFilter.startableFrom = {$gte : req.body.date}
+            //console.log(new Date(req.body.date));
+            const reqDate = new Date(req.body.date)
+            if(reqDate > currentDate){
+                testFilter.startableFrom = {$gte :new Date(req.body.date)}
+            }
+            console.log(testFilter);
+           
         }
 
         const dontWantQuery = {
@@ -50,7 +56,7 @@ router.post('', async (req, res) => {
             }
         }
 
-        for(test of foundTests){
+        for(let test of foundTests){
             
             const filter = {
                 email: test.teacher,

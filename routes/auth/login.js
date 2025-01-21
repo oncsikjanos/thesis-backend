@@ -26,7 +26,7 @@ router.post('', async (req, res) =>{
         if (!result) {
             res.status(404).send({error: "User not found"});
         } else {
-            const token = jwt.sign(result, process.env.SECRET_KEY, {expiresIn: '1h'});
+            const token = jwt.sign(result, process.env.SECRET_KEY, {expiresIn: '16h'});
             res.status(200)
             .cookie('authToken', token, 
                 {httpOnly: true,
