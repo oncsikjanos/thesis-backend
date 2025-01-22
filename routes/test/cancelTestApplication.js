@@ -37,7 +37,8 @@ router.post('', async (req, res) => {
         await Database.db.collection(process.env.TEST_COLLECTION).updateOne(testFilter, applyQuery);
 
         const resultDeleteFilter = {
-            student: req.user.email
+            student: req.user.email,
+            testId: req.body.testId
         }
 
         await Database.db.collection(process.env.RESULT_COLLECTION).deleteOne(resultDeleteFilter);

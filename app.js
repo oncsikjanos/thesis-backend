@@ -17,7 +17,10 @@ var loginRouter = require('./routes/auth/login.js');
 var registerRouter = require('./routes/auth/register.js');
 var logoutRouter = require('./routes/auth/logout.js');
 var updateUserRouter = require('./routes/user/updateUser.js')
-var getTeacher = require('./routes/user/getTeacher.js')
+var getUsers = require('./routes/user/getUsers.js')
+var makeAdmin = require('./routes/user/makeAdmin.js')
+var makeStudent = require('./routes/user/makeStudent.js')
+var setResult = require('./routes/result/setResult.js')
 
 /* Test related routes */
 var addTestRouter = require('./routes/test/addTest.js')
@@ -46,9 +49,15 @@ var deleteQuestion = require('./routes/question/deleteQuestion.js')
 var addQuestionPicture = require('./routes/question/addQuestionPicture.js')
 var deleteQuestionPicture = require('./routes/question/deleteQuestionPicture.js')
 var getExamQuestions = require('./routes/question/getExamQuestions.js')
-var saveAnswer = require('./routes/question/saveAnswer.js')
-var loadAnswer = require('./routes/question/loadAnswer.js')
 
+
+/* Answer */
+var saveAnswer = require('./routes/answer/saveAnswer.js')
+var loadAnswer = require('./routes/answer/loadAnswer.js')
+
+/* Result */
+var getResult = require('./routes/result/getResult.js')
+var getUnValuatedResults = require('./routes/result/getUnValuatedResults.js')
 
 var app = express();
 
@@ -71,7 +80,10 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/addUser', addUserRouter); /* deprecated */
 app.use('/getUser', validateCookieJWT, getUserRouter);
 app.use('/updateUser', validateCookieJWT, updateUserRouter);
-app.use('/getTeacher', getTeacher); /* add validation */
+app.use('/getUsers', validateAdmin, getUsers)
+app.use('/makeAdmin', validateAdmin, makeAdmin)
+app.use('/makeStudent', validateAdmin, makeStudent)
+app.use('/setResult', validateAdmin, setResult)
 
 app.use('/addQuestion', validateAdmin, addQuestion);
 app.use('/getQuestion', validateAdmin, getQuestion);
@@ -105,6 +117,8 @@ app.use('/startTest', validateCookieJWT, startTest)
 app.use('/finishTest', validateCookieJWT, finishTest)
 app.use('/attendVideoChat', validateCookieJWT, attendVideoChat)
 
+app.use('/getResult', validateCookieJWT, getResult)
+app.use('/getUnValuatedResults', validateAdmin, getUnValuatedResults)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

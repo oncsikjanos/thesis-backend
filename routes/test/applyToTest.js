@@ -36,13 +36,28 @@ router.post('', async (req, res) => {
 
         await Database.db.collection(process.env.TEST_COLLECTION).updateOne(testFilter, applyQuery);
 
+        const testData = await Database.db.collection(process.env.TEST_COLLECTION).findOne(testFilter);
+
         const addToResult = {
             student: req.user.email,
             testId: req.body.testId,
             status: 'not started',
+            startTill: testData.startableTill,
             canFillTill: null,
-            answers: [],
-            result: null
+            result: null,
+            maxPoints: 0,
+            teacher: testData.teacher,
+            subject: testData.subject,
+        }
+
+        const questionFilter = {
+            _id : {$in: testData.questions}
+        }
+
+        const questions = await Database.db.collection(process.env.QUESTION_COLLECTION).find(questionFilter).toArray();
+
+        for(let q of questions){
+            addToResult.maxPoints += q.points;
         }
 
         await Database.db.collection(process.env.RESULT_COLLECTION).insertOne(addToResult);

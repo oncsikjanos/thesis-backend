@@ -3,18 +3,18 @@ var router = express.Router();
 
 const Database = require('../../db/conn.js');
 
-/* Get specific user from DB */
+/* Get all users from DB */
 router.get('', async (req, res) =>{
 
-    const query = {
-        email: req.user.email
+    const dontWant = {
+        email: {$ne: req.user.email}
     }
 
-    const user = await Database.db.collection(process.env.USER_COLLECTION).findOne(query)
+    const users = await Database.db.collection(process.env.USER_COLLECTION).find(dontWant).toArray();
 
     res.status(202).send({
         "success" : true,
-        "user": user
+        "users": users
     })
 })
 
