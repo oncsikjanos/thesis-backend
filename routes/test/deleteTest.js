@@ -59,7 +59,7 @@ router.post('', async (req, res) => {
 
         await testCollection.deleteOne(testFilter);
 
-        res.status(201).send({
+        res.status(200).send({
             message: 'Test succesfully deleted',
         });
 

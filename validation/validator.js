@@ -48,7 +48,7 @@ function isValidDateOfBirth(dateOfBirth) {
     if (age < 16) {
         return { 
             isValid: false, 
-            message: "User must be at least 13 years old" 
+            message: "User must be at least 16 years old" 
         };
     }
 
@@ -56,7 +56,7 @@ function isValidDateOfBirth(dateOfBirth) {
     if (age > 100) {
         return { 
             isValid: false, 
-            message: "Invalid age (must be less than 120 years)" 
+            message: "Invalid age (must be less than 100 years)" 
         };
     }
 

@@ -54,7 +54,7 @@ router.post('', async (req, res) => {
 
         console.log(pictureAddResult);
 
-        res.status(201).send({
+        res.status(200).send({
           message: 'Picture succesfully deleted!'
         });
 

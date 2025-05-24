@@ -73,7 +73,7 @@ router.post('', async (req, res) => {
 
         await testCollection.updateOne(filter, query);
 
-        res.status(201).send({
+        res.status(200).send({
             message: 'Question succesfully deleted',
         });
 

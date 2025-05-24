@@ -31,7 +31,7 @@ router.post('', upload.single('pfp'), async (req, res) => {
         }
 
         const user = JSON.parse(req.body.user);
-        const filter = { email: user.email };
+        const filter = { email: req.user.email };
         let updateDocument;
 
        if(req.file){
